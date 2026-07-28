@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -28,9 +29,15 @@ const exampleLinks = ["《알토란》김치찌개 편", "MBN 뉴스와이드 �
 
 export const Element = (): JSX.Element => {
   const [videoLink, setVideoLink] = useState("");
+  const [, setLocation] = useLocation();
 
   const handleExampleClick = (example: string) => {
     setVideoLink(example);
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setLocation("/analyzing");
   };
 
   return (
@@ -69,7 +76,7 @@ export const Element = (): JSX.Element => {
         </h1>
         <form
           className="mt-[17px] flex w-full max-w-[498px] gap-[9px]"
-          onSubmit={(event) => event.preventDefault()}
+          onSubmit={handleSubmit}
         >
           <Input
             aria-label="영상 링크"
