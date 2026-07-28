@@ -7,12 +7,14 @@ import NotFound from "@/pages/not-found";
 
 import { Element } from "@/pages/Element";
 import { Analyzing } from "@/pages/Analyzing";
+import { Candidates } from "@/pages/Candidates";
 
 function Router() {
   return (
     <Switch>
       <Route path="/" component={Element} />
       <Route path="/analyzing" component={Analyzing} />
+      <Route path="/candidates" component={Candidates} />
       <Route component={NotFound} />
     </Switch>
   );

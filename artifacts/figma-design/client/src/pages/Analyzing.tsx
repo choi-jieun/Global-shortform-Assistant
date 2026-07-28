@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 
@@ -70,6 +71,23 @@ function WaveBar({ delay }: { delay: string }) {
 
 export const Analyzing = (): JSX.Element => {
   const [, setLocation] = useLocation();
+  const [completedCount, setCompletedCount] = useState(2); // steps 1-2 already done
+
+  // Simulate progress: complete step 3 → 4 → 5, then navigate to /candidates
+  useEffect(() => {
+    const timers: ReturnType<typeof setTimeout>[] = [];
+    timers.push(setTimeout(() => setCompletedCount(3), 2000));
+    timers.push(setTimeout(() => setCompletedCount(4), 3500));
+    timers.push(setTimeout(() => setCompletedCount(5), 5000));
+    timers.push(setTimeout(() => setLocation("/candidates"), 5800));
+    return () => timers.forEach(clearTimeout);
+  }, [setLocation]);
+
+  const getStatus = (index: number) => {
+    if (index < completedCount) return "completed";
+    if (index === completedCount) return "in-progress";
+    return "pending";
+  };
 
   const handleCancel = () => {
     setLocation("/");
@@ -123,7 +141,8 @@ export const Analyzing = (): JSX.Element => {
         {/* Progress steps */}
         <div className="mt-[32px] w-full max-w-[576px]">
           {steps.map((step, index) => {
-            const style = statusColors[step.status];
+            const status = getStatus(index);
+            const style = statusColors[status];
             const isLast = index === steps.length - 1;
 
             return (
@@ -135,7 +154,7 @@ export const Analyzing = (): JSX.Element => {
                     className={`flex h-[24px] w-[24px] flex-shrink-0 items-center justify-center rounded-full text-[11px] font-bold ${style.circle}`}
                     style={{ color: style.label }}
                   >
-                    {step.status === "completed" ? (
+                    {status === "completed" ? (
                       <span style={{ color: "#2e9e5b" }}>✓</span>
                     ) : (
                       <span>{step.number}</span>
