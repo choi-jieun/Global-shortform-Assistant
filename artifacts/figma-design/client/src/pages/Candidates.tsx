@@ -91,8 +91,7 @@ export const Candidates = (): JSX.Element => {
 
   const handleConfirm = () => {
     if (selectedId !== null) {
-      // Navigate to results (future screen)
-      alert(`구간 ${selectedId} 선택됨 – 결과 화면은 다음 단계에서 구현됩니다.`);
+      setLocation("/results");
     }
   };
 
