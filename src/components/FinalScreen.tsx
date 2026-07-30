@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Home, RefreshCw, Sparkles } from 'lucide-react';
+import { Home, RefreshCw } from 'lucide-react';
 import Header from './Header';
 import CopyButton from './ui/CopyButton';
 import type { AnalysisResult } from '../types';
@@ -40,19 +40,16 @@ export default function FinalScreen({ result, selectedHighlightId, onRestart }: 
     <div className="min-h-screen bg-surface">
       <Header />
 
-      <main className="mx-auto max-w-3xl px-4 pb-28 pt-10 sm:px-6">
+      <main className="mx-auto max-w-3xl px-4 pb-28 pt-12 sm:px-6">
         {/* Banner */}
-        <div className="flex flex-col gap-4 rounded-2xl border border-ink bg-ink px-6 py-6 text-white sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex items-center gap-2">
-            <Sparkles size={20} className="text-brand" />
-            <h1 className="text-lg font-semibold leading-snug sm:text-[22px]">
-              자막 · 영상제목 · 설명 · 해시태그 · 썸네일 문구를 만들었습니다!
-            </h1>
-          </div>
+        <div className="mb-10 flex flex-col items-center">
+          <h1 className="text-center text-xl font-semibold leading-normal text-[#1E1E1E] sm:text-[25px] sm:leading-7.5">
+            자막 · 영상제목 · 설명 · 해시태그 · 썸네일 문구를 만들었습니다!
+          </h1>
           <CopyButton
             text={everythingText}
             label="전체 복사"
-            className="shrink-0 rounded-md bg-brand px-4 py-2 text-white!"
+            className="mt-5 shrink-0 rounded-md bg-brand px-4 py-2 text-white!"
           />
         </div>
 
