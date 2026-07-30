@@ -1,26 +1,33 @@
 import { useState } from 'react';
-import { Home, Sparkles, RefreshCw } from 'lucide-react';
+import { Home, RefreshCw, Sparkles } from 'lucide-react';
 import Header from './Header';
 import CopyButton from './ui/CopyButton';
-import { mockResult } from '../data/mockData';
+import type { AnalysisResult } from '../types';
+import { formatTime } from '../lib/format';
 
 interface FinalScreenProps {
+  result: AnalysisResult;
+  selectedHighlightId: string | null;
   onRestart: () => void;
 }
 
-export default function FinalScreen({ onRestart }: FinalScreenProps) {
-  const { subtitles, suggestedTitle, description, hashtags, thumbnailText, thumbnailAltText } =
-    mockResult;
-  const [showAltThumbnail, setShowAltThumbnail] = useState(false);
+export default function FinalScreen({ result, selectedHighlightId, onRestart }: FinalScreenProps) {
+  const highlight =
+    result.highlights.find((h) => h.id === selectedHighlightId) ?? result.highlights[0];
+  const { transcript, generatedContent } = highlight;
+  const { title, description, hashtags, thumbnailText, thumbnailTextAlt } = generatedContent;
+  const [showAlt, setShowAlt] = useState(false);
+  const currentThumbnail = showAlt ? thumbnailTextAlt : thumbnailText;
 
-  const allKoText = subtitles.map((s) => `${s.time} ${s.ko}`).join('\n');
-  const allEnText = subtitles.map((s) => `${s.time} ${s.en}`).join('\n');
-  const allSubtitlesText = subtitles.map((s) => `${s.time}  ${s.ko} / ${s.en}`).join('\n');
+  const allKoText = transcript.map((line) => `${formatTime(line.start)} ${line.ko}`).join('\n');
+  const allEnText = transcript.map((line) => `${formatTime(line.start)} ${line.en}`).join('\n');
+  const allSubtitlesText = transcript
+    .map((line) => `${formatTime(line.start)}  ${line.ko} / ${line.en}`)
+    .join('\n');
   const hashtagsText = hashtags.join(' ');
-  const currentThumbnail = showAltThumbnail ? thumbnailAltText : thumbnailText;
 
   const everythingText = [
-    `[제목] ${suggestedTitle}`,
+    `[제목] ${title}`,
     `[설명] ${description}`,
     `[해시태그] ${hashtagsText}`,
     `[썸네일 문구] ${currentThumbnail}`,
@@ -45,7 +52,7 @@ export default function FinalScreen({ onRestart }: FinalScreenProps) {
           <CopyButton
             text={everythingText}
             label="전체 복사"
-            className="shrink-0 rounded-md bg-brand px-4 py-2 !text-white"
+            className="shrink-0 rounded-md bg-brand px-4 py-2 text-white!"
           />
         </div>
 
@@ -66,14 +73,14 @@ export default function FinalScreen({ onRestart }: FinalScreenProps) {
               <span>한국어 자막</span>
               <span>영어 번역</span>
             </div>
-            {subtitles.map((line, i) => (
+            {transcript.map((line, i) => (
               <div
-                key={line.time}
+                key={line.start}
                 className={`grid grid-cols-[70px_1fr_1fr] items-center px-4 py-3 text-[13px] ${
-                  i !== subtitles.length - 1 ? 'border-b border-border' : ''
+                  i !== transcript.length - 1 ? 'border-b border-border' : ''
                 }`}
               >
-                <span className="text-[11px] font-bold text-muted">{line.time}</span>
+                <span className="text-[11px] font-bold text-muted">{formatTime(line.start)}</span>
                 <span className="pr-3 text-ink">{line.ko}</span>
                 <span className="border-l border-border pl-3 text-ink">{line.en}</span>
               </div>
@@ -81,7 +88,9 @@ export default function FinalScreen({ onRestart }: FinalScreenProps) {
           </div>
 
           <div className="mt-3 flex flex-wrap items-center justify-between gap-2">
-            <span className="text-[11px] text-muted">총 {subtitles.length}개 문장 · 36초</span>
+            <span className="text-[11px] text-muted">
+              총 {transcript.length}개 문장 · {highlight.duration}초
+            </span>
             <div className="flex gap-4">
               <CopyButton text={allKoText} label="한국어 자막만 복사" />
               <CopyButton text={allEnText} label="영어 자막만 복사" />
@@ -97,10 +106,10 @@ export default function FinalScreen({ onRestart }: FinalScreenProps) {
           <div className="mt-6">
             <p className="text-[12px] font-bold text-muted">추천 제목</p>
             <div className="mt-2 flex items-start justify-between gap-3 rounded-lg border border-border-strong bg-white p-4">
-              <p className="text-[15px] font-bold text-ink">{suggestedTitle}</p>
-              <CopyButton text={suggestedTitle} />
+              <p className="text-[15px] font-bold text-ink">{title}</p>
+              <CopyButton text={title} />
             </div>
-            <p className="mt-1 text-[11px] text-muted">{suggestedTitle.length}자 · 권장 60자 이내</p>
+            <p className="mt-1 text-[11px] text-muted">{title.length}자 · 권장 60자 이내</p>
           </div>
 
           {/* Description */}
@@ -119,10 +128,7 @@ export default function FinalScreen({ onRestart }: FinalScreenProps) {
             <div className="mt-2 rounded-lg border border-border-strong bg-[#FCFCFD] p-4">
               <div className="flex flex-wrap gap-2">
                 {hashtags.map((tag) => (
-                  <span
-                    key={tag}
-                    className="rounded-full bg-surface-soft px-3 py-1 text-[12px] text-ink"
-                  >
+                  <span key={tag} className="rounded-full bg-surface-soft px-3 py-1 text-[12px] text-ink">
                     {tag}
                   </span>
                 ))}
@@ -144,13 +150,13 @@ export default function FinalScreen({ onRestart }: FinalScreenProps) {
               <p className="mt-1 text-[11px] text-muted">짧고 굵게 · 대문자 권장</p>
 
               <button
-                onClick={() => setShowAltThumbnail((v) => !v)}
+                onClick={() => setShowAlt((v) => !v)}
                 className="mt-3 flex items-center gap-1 text-[12px] font-bold text-muted hover:text-brand"
               >
                 <RefreshCw size={12} />
                 다른 문구 제안
                 <span className="ml-1 font-bold text-ink">
-                  {showAltThumbnail ? thumbnailText : thumbnailAltText}
+                  {showAlt ? thumbnailText : thumbnailTextAlt}
                 </span>
               </button>
             </div>
@@ -171,7 +177,7 @@ export default function FinalScreen({ onRestart }: FinalScreenProps) {
           <CopyButton
             text={everythingText}
             label="전체 복사"
-            className="flex flex-1 items-center justify-center rounded-lg bg-brand py-3 text-[14px] font-bold !text-white"
+            className="flex flex-1 items-center justify-center rounded-lg bg-brand py-3 text-[14px] font-bold text-white!"
           />
         </div>
       </div>

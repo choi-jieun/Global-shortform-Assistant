@@ -1,25 +1,28 @@
 import { useState } from 'react';
 import { RotateCcw, Film, ChevronDown, ChevronRight, Home } from 'lucide-react';
 import Header from './Header';
-import { mockResult } from '../data/mockData';
+import type { AnalysisResult } from '../types';
+import { formatTime, formatDuration } from '../lib/format';
 
 interface ResultScreenProps {
-  selectedSegmentId: string | null;
-  onSelectSegment: (id: string) => void;
+  result: AnalysisResult;
+  selectedHighlightId: string | null;
+  onSelectHighlight: (id: string) => void;
   onViewMaterials: () => void;
   onRestart: () => void;
   onReanalyze: () => void;
 }
 
 export default function ResultScreen({
-  selectedSegmentId,
-  onSelectSegment,
+  result,
+  selectedHighlightId,
+  onSelectHighlight,
   onViewMaterials,
   onRestart,
   onReanalyze,
 }: ResultScreenProps) {
   const [expandedId, setExpandedId] = useState<string | null>(null);
-  const { segments, video } = mockResult;
+  const { highlights, video } = result;
 
   return (
     <div className="min-h-screen bg-surface">
@@ -28,7 +31,7 @@ export default function ResultScreen({
       <main className="mx-auto max-w-3xl px-4 pb-28 pt-12 sm:px-6">
         <div className="flex items-start justify-between gap-4">
           <h1 className="text-2xl font-bold text-ink sm:text-[30px]">
-            숏폼 추천 구간 3개를 찾았습니다!
+            숏폼 추천 구간 {highlights.length}개를 찾았습니다!
           </h1>
           <button
             onClick={onReanalyze}
@@ -42,33 +45,33 @@ export default function ResultScreen({
         {/* Timeline */}
         <div className="mt-8">
           <div className="relative h-2 rounded-full bg-surface-track">
-            {segments.map((seg) => (
+            {highlights.map((h) => (
               <button
-                key={seg.id}
-                onClick={() => onSelectSegment(seg.id)}
-                title={`${seg.title} (${seg.startTime})`}
+                key={h.id}
+                onClick={() => onSelectHighlight(h.id)}
+                title={`${h.topic} (${formatTime(h.startTime)})`}
                 className={`absolute top-1/2 h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-white transition-transform hover:scale-125 ${
-                  selectedSegmentId === seg.id ? 'bg-ink ring-2 ring-brand' : 'bg-brand'
+                  selectedHighlightId === h.id ? 'bg-ink ring-2 ring-brand' : 'bg-brand'
                 }`}
-                style={{ left: `${seg.positionPercent}%` }}
+                style={{ left: `${(h.startTime / video.duration) * 100}%` }}
               />
             ))}
           </div>
           <div className="mt-2 flex justify-between text-[10px] text-muted">
             <span>00:00</span>
-            <span>원본 {video.duration}</span>
+            <span>원본 {formatTime(video.duration)}</span>
           </div>
         </div>
 
-        {/* Segment cards */}
+        {/* Highlight cards */}
         <div className="mt-6 space-y-4">
-          {segments.map((seg) => {
-            const selected = selectedSegmentId === seg.id;
-            const expanded = expandedId === seg.id;
+          {highlights.map((h) => {
+            const selected = selectedHighlightId === h.id;
+            const expanded = expandedId === h.id;
             return (
               <div
-                key={seg.id}
-                onClick={() => onSelectSegment(seg.id)}
+                key={h.id}
+                onClick={() => onSelectHighlight(h.id)}
                 className={`cursor-pointer rounded-xl border bg-white p-4 transition-colors sm:p-5 ${
                   selected ? 'border-2 border-brand' : 'border-border hover:border-border-strong'
                 }`}
@@ -80,25 +83,22 @@ export default function ResultScreen({
 
                   <div className="min-w-0 flex-1">
                     <div className="flex flex-wrap items-baseline gap-2">
-                      <span className="text-[11px] font-bold text-brand">구간 {seg.index}</span>
+                      <span className="text-[11px] font-bold text-brand">구간 {h.rank}</span>
                       <span className="text-[11px] text-muted">
-                        {seg.startTime} – {seg.endTime} · {seg.duration}
+                        {formatTime(h.startTime)} – {formatTime(h.endTime)} · {formatDuration(h.duration)}
                       </span>
                     </div>
-                    <h3 className="mt-1 text-[16px] font-bold text-ink">{seg.title}</h3>
-                    <p className="mt-1 text-[12px] leading-relaxed text-muted">{seg.description}</p>
+                    <h3 className="mt-1 text-[16px] font-bold text-ink">{h.topic}</h3>
+                    <p className="mt-1 text-[12px] leading-relaxed text-muted">{h.generatedContent.description}</p>
                   </div>
 
                   <div className="hidden shrink-0 text-right sm:block">
                     <p className="text-[10px] font-bold text-muted">추천 점수</p>
                     <div className="mt-2 flex items-center gap-2">
                       <div className="h-1.5 w-16 overflow-hidden rounded-full bg-surface-track">
-                        <div
-                          className="h-full rounded-full bg-brand"
-                          style={{ width: `${seg.score}%` }}
-                        />
+                        <div className="h-full rounded-full bg-brand" style={{ width: `${h.score}%` }} />
                       </div>
-                      <span className="text-[12px] font-bold text-brand">{seg.score}</span>
+                      <span className="text-[12px] font-bold text-brand">{h.score}</span>
                     </div>
                   </div>
                 </div>
@@ -107,15 +107,15 @@ export default function ResultScreen({
                 <div className="mt-3 flex items-center gap-2 sm:hidden">
                   <span className="text-[10px] font-bold text-muted">추천 점수</span>
                   <div className="h-1.5 w-16 overflow-hidden rounded-full bg-surface-track">
-                    <div className="h-full rounded-full bg-brand" style={{ width: `${seg.score}%` }} />
+                    <div className="h-full rounded-full bg-brand" style={{ width: `${h.score}%` }} />
                   </div>
-                  <span className="text-[12px] font-bold text-brand">{seg.score}</span>
+                  <span className="text-[12px] font-bold text-brand">{h.score}</span>
                 </div>
 
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
-                    setExpandedId(expanded ? null : seg.id);
+                    setExpandedId(expanded ? null : h.id);
                   }}
                   className="mt-3 flex items-center gap-1 text-[11px] font-bold text-brand"
                 >
@@ -126,7 +126,7 @@ export default function ResultScreen({
 
                 {expanded && (
                   <p className="mt-2 rounded-lg bg-surface-soft p-3 text-[12px] leading-relaxed text-muted">
-                    {seg.reason}
+                    {h.reason}
                   </p>
                 )}
               </div>
@@ -147,7 +147,7 @@ export default function ResultScreen({
           </button>
           <button
             onClick={onViewMaterials}
-            disabled={!selectedSegmentId}
+            disabled={!selectedHighlightId}
             className="flex-1 rounded-lg bg-brand py-3 text-[14px] font-bold text-white transition-transform hover:brightness-105 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-40"
           >
             선택 구간 제작 자료 보기
