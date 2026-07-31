@@ -1,0 +1,272 @@
+{
+  "success": true,
+  "jobId": "job-kimchi-001",
+  "video": {
+    "videoId": "mbboeAgaur8",
+    "url": "https://www.youtube.com/watch?v=mbboeAgaur8",
+    "title": "맛없는 김치도 살리는 절대 실패 없는 김치찌개",
+    "thumbnail": "https://img.youtube.com/vi/mbboeAgaur8/maxresdefault.jpg",
+    "duration": 1902,
+    "sourceLanguage": "ko"
+  },
+  "highlights": [
+    {
+      "id": "highlight-001",
+      "rank": 1,
+      "startTime": 1005,
+      "endTime": 1061,
+      "duration": 56,
+      "score": 97,
+      "scoreBreakdown": {
+        "hook": 5,
+        "completeness": 5,
+        "lengthFit": 4,
+        "specificity": 5,
+        "emotion": 5
+      },
+      "topic": "삼겹살 비계로 김치를 볶는 핵심 비법",
+      "reason": "김치찌개에 삼겹살 비계를 넣는다는 반전 포인트가 강해 짧은 영상에서도 시청자의 관심을 끌기 좋습니다.",
+      "transcript": [
+        {
+          "start": 1005,
+          "end": 1011,
+          "ko": "여기 맛없는 김치도 살려주는 알짜배기 비법이 있습니다.",
+          "en": "Here's the real secret that saves even bad-tasting kimchi."
+        },
+        {
+          "start": 1011,
+          "end": 1016,
+          "ko": "바로 김치찌개 알짜비법이죠.",
+          "en": "This is the true secret to kimchi stew."
+        },
+        {
+          "start": 1016,
+          "end": 1023,
+          "ko": "김치를 볶을 때 삼겹살 비계를 넣어라.",
+          "en": "Add pork belly fat when stir-frying the kimchi."
+        },
+        {
+          "start": 1023,
+          "end": 1029,
+          "ko": "삼겹살 비계로 김치를 볶는다고요?",
+          "en": "You stir-fry the kimchi with pork belly fat?"
+        },
+        {
+          "start": 1029,
+          "end": 1034,
+          "ko": "그렇죠, 아까 그 비계를 미리 잘라 놓으신 거예요.",
+          "en": "Exactly — that's why the fat was cut aside earlier."
+        },
+        {
+          "start": 1034,
+          "end": 1042,
+          "ko": "비계는 거의 다 녹고 겉껍질만 살짝 남습니다.",
+          "en": "The fat mostly melts away, leaving just a bit of the skin."
+        },
+        {
+          "start": 1042,
+          "end": 1048,
+          "ko": "그게 김치를 더 부드럽게 만들어 줘요.",
+          "en": "That's what makes the kimchi so much softer."
+        },
+        {
+          "start": 1048,
+          "end": 1054,
+          "ko": "잘라둔 비계를 넣고 15분에서",
+          "en": "Add the fat you cut earlier, then simmer for 15"
+        },
+        {
+          "start": 1054,
+          "end": 1061,
+          "ko": "20분 정도 끓이면 완성입니다.",
+          "en": "to 20 minutes, and it's done."
+        }
+      ],
+      "generatedContent": {
+        "title": "김치찌개에 삼겹살 비계를 넣는 이유",
+        "description": "맛없는 신김치도 부드럽고 고소하게 살리는 김치찌개 핵심 비법입니다.",
+        "hashtags": [
+          "#김치찌개",
+          "#삼겹살",
+          "#요리팁",
+          "#KoreanFood",
+          "#Shorts"
+        ],
+        "thumbnailText": "비계를 넣어야 맛있다?",
+        "thumbnailTextAlt": "이 비법, 몰랐다면 손해"
+      }
+    },
+    {
+      "id": "highlight-002",
+      "rank": 2,
+      "startTime": 1393,
+      "endTime": 1483,
+      "duration": 90,
+      "score": 94,
+      "scoreBreakdown": {
+        "hook": 4,
+        "completeness": 5,
+        "lengthFit": 3,
+        "specificity": 5,
+        "emotion": 4
+      },
+      "topic": "볶은 김치와 육수의 황금비율",
+      "reason": "김치 한 컵과 육수 두 컵이라는 명확한 숫자 정보가 있어 저장하고 따라 하기 좋은 숏폼으로 만들기 좋습니다.",
+      "transcript": [
+        {
+          "start": 1393,
+          "end": 1399,
+          "ko": "실패 없는 김치찌개의 특급 비법, 김치와 육수 비율을 1대 2로",
+          "en": "The foolproof secret for kimchi stew — a one-to-two ratio of kimchi to broth"
+        },
+        {
+          "start": 1399,
+          "end": 1404,
+          "ko": "맞추면 됩니다. 국물양은 찌개나 전골이나 비슷하거든요.",
+          "en": "is all it takes. Stews and hot pots need a similar amount of broth."
+        },
+        {
+          "start": 1404,
+          "end": 1412,
+          "ko": "건더기 한 대 육수 둘이면 전골처럼 자글자글하게 즐길 수 있어요.",
+          "en": "One part kimchi to two parts broth simmers up like a hot pot."
+        },
+        {
+          "start": 1412,
+          "end": 1419,
+          "ko": "국물을 더 원하시면 3대 1 정도로 맞추면 딱 좋습니다.",
+          "en": "Want more broth? A three-to-one ratio works just as well."
+        },
+        {
+          "start": 1419,
+          "end": 1427,
+          "ko": "직접 넣어볼게요. 볶은 김치를 한 컵 정도 넣습니다.",
+          "en": "Let's try it — I'll add about a cup of the stir-fried kimchi."
+        },
+        {
+          "start": 1427,
+          "end": 1435,
+          "ko": "미리 볶아둔 김치 200g을 냄비에 넣어주세요.",
+          "en": "Add 200g of the pre-stir-fried kimchi to the pot."
+        },
+        {
+          "start": 1435,
+          "end": 1440,
+          "ko": "고기는 아직 안 넣었어요, 육수만 먼저 부어볼게요.",
+          "en": "No meat yet — let's pour in the broth first."
+        },
+        {
+          "start": 1440,
+          "end": 1453,
+          "ko": "육수를 두 배로 맞춰주세요. 비율이 안 맞으면 자칫 밍밍해지기 쉽거든요.",
+          "en": "Match it with twice the broth — get the ratio off and it turns out bland."
+        },
+        {
+          "start": 1453,
+          "end": 1459,
+          "ko": "2대 1만 기억하면 김치국이 될 일은 없어요.",
+          "en": "Just remember two-to-one, and it'll never end up as watery kimchi soup."
+        },
+        {
+          "start": 1459,
+          "end": 1466,
+          "ko": "볶은 김치 한 컵에 육수 두 컵,",
+          "en": "One cup of stir-fried kimchi to two cups of broth —"
+        },
+        {
+          "start": 1466,
+          "end": 1474,
+          "ko": "이 황금비율만 맞추면",
+          "en": "hit this golden ratio,"
+        },
+        {
+          "start": 1474,
+          "end": 1483,
+          "ko": "싱겁지도 짜지도 않은 맛있는 김치찌개를 만들 수 있습니다.",
+          "en": "and you'll get a kimchi stew that's neither bland nor too salty."
+        }
+      ],
+      "generatedContent": {
+        "title": "김치찌개 실패 없는 1:2 황금비율",
+        "description": "김치국이 되거나 너무 짜지는 실수를 막아주는 가장 쉬운 김치찌개 비율입니다.",
+        "hashtags": [
+          "#김치찌개레시피",
+          "#황금비율",
+          "#집밥",
+          "#KFood",
+          "#Shorts"
+        ],
+        "thumbnailText": "김치 1 : 육수 2",
+        "thumbnailTextAlt": "이 비율만 지키면 실패 없음"
+      }
+    },
+    {
+      "id": "highlight-003",
+      "rank": 3,
+      "startTime": 1852,
+      "endTime": 1894,
+      "duration": 42,
+      "score": 88,
+      "scoreBreakdown": {
+        "hook": 5,
+        "completeness": 4,
+        "lengthFit": 5,
+        "specificity": 4,
+        "emotion": 4
+      },
+      "topic": "완성된 김치찌개 시식 리액션",
+      "reason": "강한 표정 변화와 리액션은 숏폼 도입부 이탈률을 낮추는 대표적인 요소입니다.",
+      "transcript": [
+        {
+          "start": 1852,
+          "end": 1858,
+          "ko": "정말 이 돼지비계가 쫄깃쫄깃하면서,",
+          "en": "This pork fat is wonderfully chewy,"
+        },
+        {
+          "start": 1858,
+          "end": 1865,
+          "ko": "고기는 고기대로 또 다른 쫄깃함이 있어요. 육수도 진하고요.",
+          "en": "and the meat has its own bite. The broth's rich too."
+        },
+        {
+          "start": 1865,
+          "end": 1872,
+          "ko": "이게 진짜 맛없는 김치로 만든 거 맞아요?",
+          "en": "Wait, is this really made from bad kimchi?"
+        },
+        {
+          "start": 1872,
+          "end": 1877,
+          "ko": "입안 가득 감칠맛이 확 도네요.",
+          "en": "That umami just spreads through your whole mouth."
+        },
+        {
+          "start": 1877,
+          "end": 1882,
+          "ko": "짜지도 싱겁지도 않은 딱 맞는 황금비율이에요.",
+          "en": "Not too salty, not too bland — it's the perfect golden ratio."
+        },
+        {
+          "start": 1882,
+          "end": 1894,
+          "ko": "여러분도 집에서 꼭 따라해 보세요. 저는 앞으로 이렇게만 끓일 거예요.",
+          "en": "You should definitely try this at home — I'm making it this way from now on."
+        }
+      ],
+      "generatedContent": {
+        "title": "직접 먹어본 김치찌개 완성 리액션",
+        "description": "삼겹살 비계와 황금비율로 완성한 김치찌개, 실제 맛은 어땠을까요?",
+        "hashtags": [
+          "#먹방",
+          "#김치찌개",
+          "#요리리액션",
+          "#KoreanFood",
+          "#Shorts"
+        ],
+        "thumbnailText": "이 맛, 실화냐",
+        "thumbnailTextAlt": "직접 먹어본 리얼 반응"
+      }
+    }
+  ]
+}
