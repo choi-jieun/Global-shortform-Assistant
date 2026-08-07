@@ -63,19 +63,19 @@ See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rule
 
 ## Service Flow
 
-### 1. 영상 입력
+#### 1. 영상 입력
 
 사용자가 분석할 영상의 링크를 입력합니다.
 
-### 2. 영상 분석
+#### 2. 영상 분석
 
 입력된 영상의 내용을 분석하고 숏폼으로 활용하기 좋은 구간을 찾습니다.
 
-### 3. 구간 추천
+#### 3. 구간 추천
 
 분석한 영상에서 숏폼 후보 구간과 해당 구간을 추천하는 이유를 제공합니다.
 
-### 4. 콘텐츠 생성
+#### 4. 콘텐츠 생성
 
 추천된 구간을 바탕으로 다음 내용을 생성합니다.
 
@@ -86,25 +86,25 @@ See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rule
 * 해시태그
 * 썸네일 문구
 
-### 5. 결과 확인
+#### 5. 결과 확인
 
 생성된 결과를 확인하고 필요한 내용을 복사하여 실제 숏폼 제작에 활용할 수 있습니다.
 
 ## Screens
 
-### Start Screen
+#### Start Screen
 
 영상 링크를 입력하고 분석을 시작하는 화면입니다.
 
-### Analysis Screen
+#### Analysis Screen
 
 영상 분석 진행 상태를 확인할 수 있는 화면입니다.
 
-### Result Screen
+#### Result Screen
 
 추천 숏폼 구간과 구간별 분석 결과를 확인할 수 있습니다.
 
-### Content Result Screen
+#### Content Result Screen
 
 자막, 영어 번역, 제목, 설명, 해시태그 등 생성된 숏폼 제작 자료를 확인할 수 있습니다.
 
@@ -142,13 +142,13 @@ See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rule
 
 ## Development
 
-### Frontend
+#### Frontend
 
 * Figma를 활용한 서비스 화면 설계
 * React와 TypeScript를 활용한 화면 구현
 * Mock Data를 활용한 서비스 흐름 구현
 
-### Backend
+#### Backend
 
 * 영상 및 자막 데이터 처리
 * 숏폼 추천 구간 생성
