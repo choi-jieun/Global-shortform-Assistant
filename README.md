@@ -185,13 +185,10 @@ See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rule
 git clone <repository-url>
 cd <project-directory>
 npm install
-
-## License
-
-This project is licensed under the [MIT License](LICENSE).
-
 npm run dev
 ```
+
 ## License
 
 This project is licensed under the [MIT License](LICENSE).
+
