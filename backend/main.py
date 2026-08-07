@@ -143,11 +143,15 @@ def score_and_generate(caps_in, index):
     "title": "영어 숏폼 제목",
     "description": "영어 설명 1~2문장",
     "hashtags": ["#hashtag1", "#hashtag2", "#hashtag3"],
-    "thumbnailText": "썸네일에 들어갈 짧은 영어 문구"
+    "thumbnailText": "썸네일에 들어갈 짧은 영어 문구 (기본안)",
+    "thumbnailTextAlt": "썸네일 문구 대안 2안 (기본안과 톤·표현이 달라야 하며 동일 문구 금지)"
   }}
 }}
 
-transcript 배열은 위 자막 줄들을 자연스러운 문장 단위로 합치거나 나눠서, start/end가 서로 겹치지 않게 순서대로 구성해줘."""
+transcript 배열 구성 규칙:
+- 위 자막 줄들을 자연스러운 문장 단위로 합치거나 나눠서, start/end가 서로 겹치지 않게 순서대로 구성
+- 한 줄이 30초 이상 이어지지 않게, 실제 발화 호흡 단위로 5~10초 간격 여러 줄로 나눠줘
+- 이 구간 길이를 고려했을 때 보통 4줄 이상 나와야 하고, 2~3줄만 나오면 너무 성긴 것"""
 
     response = client.chat.completions.create(
         model="gpt-5.4-mini",
@@ -265,6 +269,8 @@ def get_result(job_id: str):
     job = jobs.get(job_id)
     if not job:
         raise HTTPException(status_code=404, detail={"code": "JOB_NOT_FOUND", "message": "작업 번호가 존재하지 않습니다."})
+    if job["status"] == "failed":
+        raise HTTPException(status_code=500, detail=job.get("error", {"code": "ANALYSIS_FAILED", "message": "분석 중 오류가 발생했습니다."}))
     if job["status"] != "completed":
         raise HTTPException(status_code=409, detail={"code": "ANALYSIS_NOT_COMPLETED", "message": "분석이 아직 끝나지 않았습니다."})
     return {"success": True, "jobId": job_id, "video": job["video"], "highlights": job["highlights"]}
