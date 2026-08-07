@@ -156,7 +156,7 @@ See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rule
 * 제목, 설명, 해시태그 생성
 * API 응답 구성
 
-### Integration
+#### Integration
 
 * 기존 Mock Data를 실제 API 응답으로 변경
 * Frontend와 Backend API 연결
@@ -185,5 +185,10 @@ See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rule
 git clone <repository-url>
 cd <project-directory>
 npm install
+
+## License
+
+This project is licensed under the [MIT License](LICENSE).
+
 npm run dev
 ```
