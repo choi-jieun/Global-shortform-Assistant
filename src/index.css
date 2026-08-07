@@ -1,41 +1,88 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:ital@0;1&display=swap');
-@import "tailwindcss";
+@import 'tailwindcss';
 
 @theme {
-  --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
-  --font-serif: 'Playfair Display', ui-serif, Georgia, serif;
+    --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+    --font-serif: 'Playfair Display', ui-serif, Georgia, serif;
 
-  --color-ink: #2B2F36;
-  --color-muted: #767C86;
-  --color-border: #DDE0E5;
-  --color-border-strong: #C7CBD1;
-  --color-surface: #FFFFFF;
-  --color-surface-soft: #F4F5F7;
-  --color-surface-track: #E9EBEF;
+    --color-ink: #2b2f36;
+    --color-muted: #767c86;
+    --color-border: #dde0e5;
+    --color-border-strong: #c7cbd1;
+    --color-surface: #ffffff;
+    --color-surface-soft: #f4f5f7;
+    --color-surface-track: #e9ebef;
 
-  --color-brand: #FF6A13;
-  --color-brand-soft: #FFF1E8;
-  --color-brand-glow: #FF9D00;
+    --color-brand: #ff6a13;
+    --color-brand-soft: #fff1e8;
+    --color-brand-glow: #ff9d00;
 
-  --color-success: #2E9E5B;
-  --color-success-soft: #E8F5EC;
+    --color-success: #2e9e5b;
+    --color-success-soft: #e8f5ec;
 }
 
-html, body, #root {
-  height: 100%;
+html,
+body,
+#root {
+    height: 100%;
 }
 
 body {
-  font-family: var(--font-sans);
-  color: var(--color-ink);
-  -webkit-font-smoothing: antialiased;
+    font-family: var(--font-sans);
+    color: var(--color-ink);
+    -webkit-font-smoothing: antialiased;
 }
 
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+    width: 8px;
+    height: 8px;
 }
 ::-webkit-scrollbar-thumb {
-  background: var(--color-border-strong);
-  border-radius: 999px;
+    background: var(--color-border-strong);
+    border-radius: 999px;
+}
+
+/* Card entrance animation (play when .is-visible present) */
+@keyframes cardEnter {
+    from {
+        opacity: 0;
+        transform: translateY(22px) scale(0.98);
+        filter: blur(2px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+        filter: blur(0);
+    }
+}
+
+.card-enter {
+    opacity: 0;
+    will-change: transform, opacity, filter;
+}
+
+.card-enter.is-visible {
+    animation: cardEnter 1000ms cubic-bezier(0.2, 0.9, 0.2, 1) forwards;
+}
+
+@keyframes popIn {
+    0% {
+        transform: scale(0.78);
+        opacity: 0;
+    }
+    60% {
+        transform: scale(1.08);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+.number-pop {
+    opacity: 1;
+}
+
+.number-pop.is-visible {
+    animation: popIn 700ms cubic-bezier(0.2, 0.9, 0.2, 1) forwards;
 }
