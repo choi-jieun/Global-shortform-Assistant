@@ -2,6 +2,8 @@ import json
 import re
 import uuid
 from urllib.parse import urlparse, parse_qs
+import os
+import requests
 
 import yt_dlp
 from dotenv import load_dotenv
@@ -45,15 +47,45 @@ def extract_video_id(url: str) -> str:
     raise ValueError("올바른 유튜브 URL이 아닙니다.")
 
 
+def parse_iso8601_duration(duration: str) -> int:
+    match = re.match(r"PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?", duration)
+    hours = int(match.group(1) or 0)
+    minutes = int(match.group(2) or 0)
+    seconds = int(match.group(3) or 0)
+    return hours * 3600 + minutes * 60 + seconds
+
+
 def get_video_info(url: str) -> dict:
-    with yt_dlp.YoutubeDL({"quiet": True}) as ydl:
-        info = ydl.extract_info(url, download=False)
+    video_id = extract_video_id(url)
+    resp = requests.get(
+        "https://www.googleapis.com/youtube/v3/videos",
+        params={
+            "part": "snippet,contentDetails",
+            "id": video_id,
+            "key": os.getenv("YOUTUBE_API_KEY"),
+        },
+    )
+    data = resp.json()
+    items = data.get("items", [])
+    if not items:
+        raise ValueError("영상을 찾을 수 없습니다.")
+
+    snippet = items[0]["snippet"]
+    thumbnails = snippet["thumbnails"]
+    thumbnail_url = (
+        thumbnails.get("maxres") or thumbnails.get("high")
+        or thumbnails.get("standard") or thumbnails.get("medium")
+        or thumbnails.get("default")
+    )["url"]
+
+    duration = parse_iso8601_duration(items[0]["contentDetails"]["duration"])
+
     return {
-        "videoId": info["id"],
+        "videoId": video_id,
         "url": url,
-        "title": info["title"],
-        "thumbnail": info["thumbnail"],
-        "duration": info["duration"],
+        "title": snippet["title"],
+        "thumbnail": thumbnail_url,
+        "duration": duration,
         "sourceLanguage": "ko",
     }
 
@@ -236,9 +268,14 @@ def run_analysis(job_id, video_url, target_language, highlight_count):
 @app.post("/api/analyses", status_code=202)
 def create_analysis(req: AnalyzeRequest, background_tasks: BackgroundTasks):
     try:
+        extract_video_id(req.videoUrl)
+    except ValueError:
+        raise HTTPException(status_code=400, detail={"code": "INVALID_VIDEO_URL", "message": "올바른 유튜브 URL을 입력해주세요."})
+
+    try:
         video_info = get_video_info(req.videoUrl)
     except Exception:
-        raise HTTPException(status_code=400, detail={"code": "INVALID_VIDEO_URL", "message": "올바른 유튜브 URL을 입력해주세요."})
+        raise HTTPException(status_code=404, detail={"code": "VIDEO_NOT_FOUND", "message": "영상을 찾을 수 없습니다."})
 
     job_id = f"job-{uuid.uuid4().hex[:8]}"
     jobs[job_id] = {"status": "queued", "progress": 0, "currentStep": "분석 대기 중", "video": video_info}
