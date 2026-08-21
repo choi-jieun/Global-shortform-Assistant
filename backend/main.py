@@ -90,10 +90,22 @@ def get_video_info(url: str) -> dict:
     }
 
 
+CAPTIONS_CACHE_DIR = "captions_cache"
+
 def get_captions(video_id: str) -> list:
-    ytt_api = YouTubeTranscriptApi()
-    transcript = ytt_api.fetch(video_id, languages=["ko"])
-    raw = transcript.to_raw_data()
+    cache_path = os.path.join(CAPTIONS_CACHE_DIR, f"{video_id}.json")
+
+    if os.path.exists(cache_path):
+        with open(cache_path, "r", encoding="utf-8") as f:
+            raw = json.load(f)
+    else:
+        ytt_api = YouTubeTranscriptApi()
+        transcript = ytt_api.fetch(video_id, languages=["ko"])
+        raw = transcript.to_raw_data()
+        os.makedirs(CAPTIONS_CACHE_DIR, exist_ok=True)
+        with open(cache_path, "w", encoding="utf-8") as f:
+            json.dump(raw, f, ensure_ascii=False)
+
     for c in raw:
         c["end"] = c["start"] + c["duration"]
     return raw
