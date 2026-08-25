@@ -77,10 +77,20 @@ export default function ResultScreen({
                 }`}
               >
                 <div className="flex gap-4">
-                  <div className="flex h-16 w-24 shrink-0 items-center justify-center rounded-md bg-ink text-white">
-                    <Film size={18} />
+                  <div className="flex h-16 w-24 shrink-0 items-center justify-center overflow-hidden rounded-md bg-ink text-white">
+                    {video.thumbnail ? (
+                      <img
+                        src={video.thumbnail}
+                        alt={h.topic}
+                        className="h-full w-full object-cover"
+                        onError={(e) => {
+                          e.currentTarget.style.display = 'none';
+                          e.currentTarget.nextElementSibling?.classList.remove('hidden');
+                        }}
+                      />
+                    ) : null}
+                    <Film size={18} className={video.thumbnail ? 'hidden' : ''} />
                   </div>
-
                   <div className="min-w-0 flex-1">
                     <div className="flex flex-wrap items-baseline gap-2">
                       <span className="text-[11px] font-bold text-brand">구간 {h.rank}</span>

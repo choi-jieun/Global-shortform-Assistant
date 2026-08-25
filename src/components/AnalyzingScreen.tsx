@@ -91,8 +91,20 @@ export default function AnalyzingScreen({
         {/* Video info card */}
         {videoMeta && (
           <div className="mt-8 flex items-center gap-4 rounded-xl border border-border bg-white p-4">
-            <div className="flex h-14 w-20 shrink-0 items-center justify-center rounded-md bg-ink text-white">
-              <Film size={20} />
+            <div className="flex h-14 w-20 shrink-0 items-center justify-center overflow-hidden rounded-md bg-ink text-white">
+              {videoMeta.thumbnail ? (
+                <img
+                  src={videoMeta.thumbnail}
+                  alt={videoMeta.title}
+                  className="h-full w-full object-cover"
+                  onError={(e) => {
+                    // 썸네일 로드 실패 시 필름 아이콘으로 대체
+                    e.currentTarget.style.display = 'none';
+                    e.currentTarget.nextElementSibling?.classList.remove('hidden');
+                  }}
+                />
+              ) : null}
+              <Film size={20} className={videoMeta.thumbnail ? 'hidden' : ''} />
             </div>
             <div className="min-w-0 flex-1">
               <p className="truncate text-[16px] font-bold text-ink">{videoMeta.title}</p>
