@@ -12,6 +12,9 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000
 // false: 실제 백엔드로 연동
 const USE_MOCK = import.meta.env.VITE_USE_MOCK !== 'false';
 
+// 테스트용 스위치. 'fail'/'timeout'으로 바꿔서 에러 화면 확인 후 반드시 'success'로 되돌릴 것
+const MOCK_SCENARIO: 'success' | 'fail' | 'timeout' = 'success';
+
 // 명세서 3번 규칙: 2초 간격, 최대 90회(약 3분)
 const POLL_INTERVAL_MS = 2000;
 const MAX_POLL_COUNT = 90;
@@ -35,6 +38,11 @@ function wait(ms: number) {
  * 공통 fetch 래퍼.
  * - JSON 요청/응답을 가정
  * - success:false 이거나 HTTP 에러면 ApiError로 통일해서 던짐
+ *
+ * 백엔드 에러 응답은 두 가지 형태로 옴:
+ * 1) { success:false, error:{code,message} } — job 자체 실패(예: ANALYSIS_FAILED), status 200
+ * 2) { detail:{code,message} } — FastAPI HTTPException (예: 404 JOB_NOT_FOUND)
+ * 3) { detail:[{msg,loc,...}] } — Pydantic 자동 검증 실패, 422
  */
 async function request<T>(path: string, options?: RequestInit): Promise<T> {
   let res: Response;
@@ -62,12 +70,32 @@ async function request<T>(path: string, options?: RequestInit): Promise<T> {
     });
   }
 
-  const body = data as { success?: boolean; error?: ApiErrorBody };
+  const body = data as {
+    success?: boolean;
+    error?: ApiErrorBody;
+    detail?: ApiErrorBody | Array<{ msg: string; loc: (string | number)[] }>;
+  };
 
   if (!res.ok || body.success === false) {
-    throw new ApiError(
-      body.error ?? { code: 'INTERNAL_SERVER_ERROR', message: '알 수 없는 오류가 발생했습니다.' },
-    );
+    // 1순위: { success:false, error:{code,message} }
+    if (body.error) {
+      throw new ApiError(body.error);
+    }
+
+    // 2순위: { detail:{code,message} } (HTTPException)
+    if (body.detail && !Array.isArray(body.detail)) {
+      throw new ApiError(body.detail);
+    }
+
+    // 3순위: { detail:[{msg,loc,...}] } (422 Pydantic 검증 오류)
+    if (Array.isArray(body.detail) && body.detail.length > 0) {
+      throw new ApiError({
+        code: 'VALIDATION_ERROR',
+        message: body.detail[0].msg || '입력값이 올바르지 않습니다.',
+      });
+    }
+
+    throw new ApiError({ code: 'INTERNAL_SERVER_ERROR', message: '알 수 없는 오류가 발생했습니다.' });
   }
 
   return data as T;
@@ -105,6 +133,29 @@ export async function getStatus(jobId: string): Promise<StatusResponse> {
     await wait(200);
     const count = (mockPollCounts.get(jobId) ?? 0) + 1;
     mockPollCounts.set(jobId, count);
+
+    // 타임아웃 화면 테스트: 진행률이 100%에 도달하지 못하고 계속 processing만 반환
+    if (MOCK_SCENARIO === 'timeout') {
+      return {
+        success: true,
+        jobId,
+        status: 'processing',
+        progress: 99,
+        currentStep: '핵심 구간과 숏폼 문구를 생성하고 있습니다. (mock)',
+      };
+    }
+
+    // 실패 화면 테스트: 2번째 polling에서 바로 실패 응답
+    if (MOCK_SCENARIO === 'fail' && count >= 2) {
+      return {
+        success: false,
+        jobId,
+        status: 'failed',
+        progress: 0,
+        error: { code: 'ANALYSIS_FAILED', message: '분석 중 오류가 발생했습니다. (mock 테스트)' },
+      };
+    }
+
     const progress = Math.min(count * 33, 100); // 33%씩 증가 → 약 3회 polling(약 6초)에 완료
     return {
       success: true,
