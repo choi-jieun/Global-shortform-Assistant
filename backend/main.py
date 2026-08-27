@@ -163,6 +163,16 @@ def length_fit_score(duration):
     return 1
 
 
+def fix_transcript_overlaps(transcript):
+    transcript.sort(key=lambda x: x["start"])
+    for i in range(1, len(transcript)):
+        if transcript[i]["start"] < transcript[i - 1]["end"]:
+            transcript[i]["start"] = transcript[i - 1]["end"]
+        if transcript[i]["end"] <= transcript[i]["start"]:
+            transcript[i]["end"] = transcript[i]["start"] + 1
+    return transcript
+
+
 def score_and_generate(caps_in, index):
     transcript_text = "\n".join(f"[{c['start']}s] {c['text']}" for c in caps_in)
     prompt = f"""다음은 한 영상의 자막입니다.
@@ -178,8 +188,8 @@ def score_and_generate(caps_in, index):
     "specificity": (1~5, 막연한 설명이 아니라 수치·비율 등 구체적인 정보인가),
     "emotion": (1~5, '몰랐던 상식' 등 감정적 반응을 유발하는가)
   }},
-  "topic": "이 구간의 핵심 주제 한 줄",
-  "reason": "숏폼 후보로 추천하는 이유 한두 문장",
+  "topic": "이 구간의 핵심 주제 한 줄 (반드시 한국어로만 작성, 영어 섞지 말 것)",
+  "reason": "숏폼 후보로 추천하는 이유 한두 문장 (반드시 한국어로만 작성, 영어 섞지 말 것)",
   "transcript": [
     {{"start": 시작초, "end": 종료초, "ko": "한국어 문장", "en": "영어 번역"}}
   ],
@@ -195,7 +205,9 @@ def score_and_generate(caps_in, index):
 transcript 배열 구성 규칙:
 - 위 자막 줄들을 자연스러운 문장 단위로 합치거나 나눠서, start/end가 서로 겹치지 않게 순서대로 구성
 - 한 줄이 30초 이상 이어지지 않게, 실제 발화 호흡 단위로 5~10초 간격 여러 줄로 나눠줘
-- 이 구간 길이를 고려했을 때 보통 4줄 이상 나와야 하고, 2~3줄만 나오면 너무 성긴 것"""
+- 이 구간 길이를 고려했을 때 보통 4줄 이상 나와야 하고, 2~3줄만 나오면 너무 성긴 것
+
+중요: topic과 reason은 100% 한국어로만 작성해야 해. targetLanguage 값과 무관하게 항상 한국어 고정이야."""
 
     response = client.chat.completions.create(
         model="gpt-5.4-mini",
@@ -210,6 +222,8 @@ transcript 배열 구성 규칙:
     for line in result["transcript"]:
         line["start"] = round(line["start"])
         line["end"] = round(line["end"])
+
+    result["transcript"] = fix_transcript_overlaps(result["transcript"])
 
     start_time = result["transcript"][0]["start"]
     end_time = result["transcript"][-1]["end"]
