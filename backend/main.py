@@ -212,7 +212,7 @@ transcript 배열 구성 규칙:
     response = client.chat.completions.create(
         model="gpt-5.4-mini",
         messages=[
-            {"role": "developer", "content": "너는 유튜브 롱폼 영상에서 숏폼 후보 구간을 평가하고 콘텐츠를 생성하는 어시스턴트야. 반드시 JSON만 출력해."},
+            {"role": "developer", "content": "너는 유튜브 롱폼 영상에서 숏폼 후보 구간을 평가하고 콘텐츠를 생성하는 어시스턴트야. 반드시 JSON만 출력해. topic과 reason 필드는 예외 없이 항상 100% 한국어로만 작성해야 하고 영어 단어를 단 하나도 섞으면 안 돼. generatedContent 안쪽 필드들(title/description/hashtags/thumbnailText 등)만 영어로 작성해."},
             {"role": "user", "content": prompt},
         ],
         response_format={"type": "json_object"},
