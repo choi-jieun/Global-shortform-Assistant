@@ -172,6 +172,13 @@ def fix_transcript_overlaps(transcript):
             transcript[i]["end"] = transcript[i]["start"] + 1
     return transcript
 
+def is_mostly_korean(text: str) -> bool:
+    korean_chars = len(re.findall(r"[가-힣]", text))
+    total_chars = len(re.findall(r"[A-Za-z가-힣]", text))
+    if total_chars == 0:
+        return True
+    return korean_chars / total_chars >= 0.5
+
 
 def score_and_generate(caps_in, index):
     transcript_text = "\n".join(f"[{c['start']}s] {c['text']}" for c in caps_in)
@@ -218,6 +225,18 @@ transcript 배열 구성 규칙:
         response_format={"type": "json_object"},
     )
     result = json.loads(response.choices[0].message.content)
+    if not is_mostly_korean(result["topic"]) or not is_mostly_korean(result["reason"]):
+        fix_response = client.chat.completions.create(
+            model="gpt-5.4-mini",
+            messages=[
+                {"role": "developer", "content": "다음 JSON의 topic과 reason 값을 자연스러운 한국어로 번역해서, 같은 키 구조의 JSON으로만 반환해."},
+                {"role": "user", "content": json.dumps({"topic": result["topic"], "reason": result["reason"]}, ensure_ascii=False)},
+            ],
+            response_format={"type": "json_object"},
+        )
+        fixed = json.loads(fix_response.choices[0].message.content)
+        result["topic"] = fixed["topic"]
+        result["reason"] = fixed["reason"]
 
     for line in result["transcript"]:
         line["start"] = round(line["start"])
