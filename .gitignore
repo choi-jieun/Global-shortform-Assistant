@@ -23,3 +23,13 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Python / backend
+__pycache__/
+*.pyc
+venv/
+.venv/
+
+# 캐시/생성 데이터 (런타임에 생성되는 파일, 커밋 대상 아님)
+backend/captions_cache/
+backend/caption_data.json
