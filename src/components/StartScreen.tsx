@@ -43,17 +43,20 @@ export default function StartScreen({
 }: StartScreenProps) {
     const [error, setError] = useState(false);
     const [isFocused, setIsFocused] = useState(false);
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
     const [visible, setVisible] = useState<boolean[]>(() =>
         new Array(steps.length).fill(false),
     );
 
     const handleStart = () => {
+        if (isSubmitting) return;
         if (!videoUrl.trim()) {
             setError(true);
             return;
         }
         setError(false);
+        setIsSubmitting(true);
         onStart();
     };
 
@@ -133,7 +136,8 @@ export default function StartScreen({
                             </div>
                             <button
                                 onClick={handleStart}
-                                className="flex items-center justify-center gap-1.5 rounded-lg bg-brand px-6 py-3 text-[15px] font-bold text-white transition-transform hover:brightness-105 active:scale-[0.98]"
+                                disabled={isSubmitting}
+                                className="flex items-center justify-center gap-1.5 rounded-lg bg-brand px-6 py-3 text-[15px] font-bold text-white transition-transform hover:brightness-105 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60"
                             >
                                 START
                                 <ArrowRight size={16} />
@@ -165,7 +169,7 @@ export default function StartScreen({
                             return (
                                 <div
                                     key={step.title}
-                                    ref={(el) => (cardRefs.current[i] = el)}
+                                    ref={(el) => { cardRefs.current[i] = el; }}
                                     className={`rounded-xl border border-border bg-white p-5 card-enter ${
                                         visible[i] ? 'is-visible' : ''
                                     }`}

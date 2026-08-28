@@ -37,7 +37,11 @@ while w_start + WINDOW_SIZE <= video_end:
 
     w_start += STEP
 
-max_raw = max(c["raw_score"] for c in candidates)
+    if not candidates:
+        print("추천할 만한 구간을 찾지 못했습니다.")
+        raise SystemExit(0)
+
+    max_raw = max(c["raw_score"] for c in candidates)
 for c in candidates:
     c["score"] = round(max(0, c["raw_score"]) / max_raw * 100)
 

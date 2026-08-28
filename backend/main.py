@@ -180,7 +180,7 @@ def is_mostly_korean(text: str) -> bool:
     return korean_chars / total_chars >= 0.5
 
 
-def score_and_generate(caps_in, index):
+def score_and_generate(caps_in, index, target_language="en"):
     transcript_text = "\n".join(f"[{c['start']}s] {c['text']}" for c in caps_in)
     prompt = f"""다음은 한 영상의 자막입니다.
 
@@ -198,13 +198,13 @@ def score_and_generate(caps_in, index):
   "topic": "이 구간의 핵심 주제 한 줄 (반드시 한국어로만 작성, 영어 섞지 말 것)",
   "reason": "숏폼 후보로 추천하는 이유 한두 문장 (반드시 한국어로만 작성, 영어 섞지 말 것)",
   "transcript": [
-    {{"start": 시작초, "end": 종료초, "ko": "한국어 문장", "en": "영어 번역"}}
+    {{"start": 시작초, "end": 종료초, "ko": "한국어 문장", "{target_language}": "{target_language} 언어로 번역된 문장"}}
   ],
   "generatedContent": {{
-    "title": "영어 숏폼 제목",
-    "description": "영어 설명 1~2문장",
+    "title": "{target_language} 언어로 된 숏폼 제목",
+    "description": "{target_language} 언어로 된 설명 1~2문장",
     "hashtags": ["#hashtag1", "#hashtag2", "#hashtag3"],
-    "thumbnailText": "썸네일에 들어갈 짧은 영어 문구 (기본안)",
+    "thumbnailText": "썸네일에 들어갈 {target_language} 언어의 짧은 문구 (기본안)",
     "thumbnailTextAlt": "썸네일 문구 대안 2안 (기본안과 톤·표현이 달라야 하며 동일 문구 금지)"
   }}
 }}
@@ -219,7 +219,7 @@ transcript 배열 구성 규칙:
     response = client.chat.completions.create(
         model="gpt-5.4-mini",
         messages=[
-            {"role": "developer", "content": "너는 유튜브 롱폼 영상에서 숏폼 후보 구간을 평가하고 콘텐츠를 생성하는 어시스턴트야. 반드시 JSON만 출력해. topic과 reason 필드는 예외 없이 항상 100% 한국어로만 작성해야 하고 영어 단어를 단 하나도 섞으면 안 돼. generatedContent 안쪽 필드들(title/description/hashtags/thumbnailText 등)만 영어로 작성해."},
+            {"role": "developer", "content": f"너는 유튜브 롱폼 영상에서 숏폼 후보 구간을 평가하고 콘텐츠를 생성하는 어시스턴트야. 반드시 JSON만 출력해. topic과 reason 필드는 예외 없이 항상 100% 한국어로만 작성해야 하고 영어 단어를 단 하나도 섞으면 안 돼. generatedContent 안쪽 필드들(title/description/hashtags/thumbnailText 등)과 transcript의 번역 필드는 '{target_language}' 언어로 작성해."},
             {"role": "user", "content": prompt},
         ],
         response_format={"type": "json_object"},
